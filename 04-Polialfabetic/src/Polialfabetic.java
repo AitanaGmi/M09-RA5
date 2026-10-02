@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -8,6 +7,7 @@ public class Polialfabetic {
     private static String letras = "aáàbcçdeéèfghiíìïjklmnñoóòpqrstuúùüvwxyz";
     private static char[] alfabeto = letras.toCharArray();
     private static Random random;
+    private static long clauSecreta = 1234;
 
     static char[] alfabetoPermutado =  new char[alfabeto.length];
 
@@ -17,7 +17,7 @@ public class Polialfabetic {
             lista.add(alfabeto[i]); //x cada posicion lo añado en mi lista
         }
 
-        Collections.shuffle(lista); //aqui la mezcla
+        Collections.shuffle(lista,random); //aqui la mezcla
 
         for (int i = 0; i < lista.size(); i++) {
             alfabetoPermutado[i] = lista.get(i); //aqui modifico alfabeto permutado y lo añad global
@@ -26,9 +26,9 @@ public class Polialfabetic {
         
     }
 
-    public static void initRandom(int clauSecreta){
+    public static void initRandom(long clauSecreta){
 
-        random = new random(clauSecreta); //creo mi variable random q usa mi clavesecreta
+        random = new Random(clauSecreta); //creo mi variable random q usa mi clavesecreta
     }
     
 
@@ -45,6 +45,7 @@ public class Polialfabetic {
                         letra = Character.toUpperCase(alfabetoPermutado[j]);
                         resultado +=letra;
                         esLetra = true;
+                        break;
                     }
                 }
             }else{
@@ -53,6 +54,7 @@ public class Polialfabetic {
                         letra = alfabetoPermutado[j];
                         resultado +=letra;
                         esLetra = true;
+                        break;
                     }
                 }
             }
@@ -66,14 +68,42 @@ public class Polialfabetic {
     }
 
     public static String desxifraPoliAlfa(String msgXifrat){
-
         String resultado = "";
+        for (int i = 0; i < msgXifrat.length(); i++) { //hola es mi msg i= 0 -> h
+            char letra =msgXifrat.charAt(i); //la letra en la q se encuentra i en esa posicion
+            permutaAlfabet();
+            boolean esLetra = false;
+            if(Character.isUpperCase(letra)){
+                letra = Character.toLowerCase(letra);
+                for (int j = 0; j < alfabetoPermutado.length; j++) {
+                    if(letra == alfabetoPermutado[j]){
+                        letra = Character.toUpperCase(alfabeto[j]);
+                        resultado +=letra;
+                        esLetra = true;
+                        break;
+                    }
+                }
+            }else{
+                for (int j = 0; j < alfabetoPermutado.length; j++) {
+                    if(letra == alfabetoPermutado[j]){
+                        letra = alfabeto[j];
+                        resultado +=letra;
+                        esLetra = true;
+                        break;
+                    }
+                }
+            }
+
+        if(!esLetra){
+            resultado+=letra;
+        }
+
+        }
         return resultado;
     }
 
     public static void main(String[] args) {
-        int clauSecreta =49; //mi llave será este numero
-        String msgs[] = {"Test 01 àrbritre, coixí, Perímetre",
+        String msgs[] = {"Test 01 àrbitre, coixí, Perímetre",
         "Test 02 Taüll, DÍA, año",
         "Test 03 Peça, Òrrius, Bòvila"};
         String msgsXifrats[] = new String[msgs.length];
@@ -83,6 +113,12 @@ public class Polialfabetic {
             initRandom(clauSecreta); //se lo apso a mi funcion para q me genere un patron
             msgsXifrats[i] = xifraPoliAlfa(msgs[i]);
             System.out.printf("%-34s -> %s%n", msgs[i], msgsXifrats[i]);
+        }
+         System.out.println("Desxifratge:\n------------");
+        for (int i = 0; i < msgs.length; i++) {
+            initRandom(clauSecreta);
+            String msg = desxifraPoliAlfa(msgsXifrats[i]);
+            System.out.printf("%-34s -> %s%n", msgsXifrats[i], msg);
         }
     }
 }
