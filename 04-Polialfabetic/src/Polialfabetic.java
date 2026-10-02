@@ -2,18 +2,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class Polialfabetic {
     private static String letras = "aáàbcçdeéèfghiíìïjklmnñoóòpqrstuúùüvwxyz";
     private static char[] alfabeto = letras.toCharArray();
+    private static Random random;
 
     static char[] alfabetoPermutado =  new char[alfabeto.length];
-
-    /*
-        como quiero q sea general la creo static la cal despues se  modificara en aquel metodo q se use esta avriable
-        entonces antes de nada a este char hay q darle su tamaño y ps queremos q tenga el mismo tamaño q nustro alfabeto normal,
-        ps le digo new char[la longitud d e mi alfabeto].
-    */
 
     public static void permutaAlfabet() {
         List<Character> lista = new ArrayList<>(); //creo una lista
@@ -29,28 +25,64 @@ public class Polialfabetic {
         }
         
     }
+
+    public static void initRandom(int clauSecreta){
+
+        random = new random(clauSecreta); //creo mi variable random q usa mi clavesecreta
+    }
+    
+
     public static String xifraPoliAlfa(String msg){
         String resultado = "";
         for (int i = 0; i < msg.length(); i++) { //hola es mi msg i= 0 -> h
-
             char letra =msg.charAt(i); //la letra en la q se encuentra i en esa posicion
-
-            for (int j = 0; j < alfabeto.length; j++) {
-                if(letra == alfabeto[j]){
-                    
+            permutaAlfabet(); //hago q cada q cambie i de poicion ps permuto un nuevo alfabeto.
+            boolean esLetra = false;
+            if(Character.isUpperCase(letra)){
+                letra = Character.toLowerCase(letra);
+                for (int j = 0; j < alfabeto.length; j++) {
+                    if(letra == alfabeto[j]){
+                        letra = Character.toUpperCase(alfabetoPermutado[j]);
+                        resultado +=letra;
+                        esLetra = true;
+                    }
+                }
+            }else{
+                for (int j = 0; j < alfabeto.length; j++) {
+                    if(letra == alfabeto[j]){
+                        letra = alfabetoPermutado[j];
+                        resultado +=letra;
+                        esLetra = true;
+                    }
                 }
             }
-            /*
-            -   que quiero hacer con mi mnsg?
-                quiero recorrerlo para saber en que letra estoy y esa letra cambairla por una de mi
-                alfabeto permutado. A excepcion de qu esta vez cada letra debe tener su propio alfabeto permutado
-            
-            */
-        }
-        return
 
+        if(!esLetra){
+            resultado+=letra;
+        }
+
+        }
+        return resultado;
     }
+
     public static String desxifraPoliAlfa(String msgXifrat){
 
+        String resultado = "";
+        return resultado;
+    }
+
+    public static void main(String[] args) {
+        int clauSecreta =49; //mi llave será este numero
+        String msgs[] = {"Test 01 àrbritre, coixí, Perímetre",
+        "Test 02 Taüll, DÍA, año",
+        "Test 03 Peça, Òrrius, Bòvila"};
+        String msgsXifrats[] = new String[msgs.length];
+
+        System.out.println("Xifratge:\n---------");
+        for (int i = 0; i < msgs.length; i++) {
+            initRandom(clauSecreta); //se lo apso a mi funcion para q me genere un patron
+            msgsXifrats[i] = xifraPoliAlfa(msgs[i]);
+            System.out.printf("%-34s -> %s%n", msgs[i], msgsXifrats[i]);
+        }
     }
 }
