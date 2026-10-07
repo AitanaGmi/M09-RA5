@@ -109,7 +109,6 @@ public class RotX {
 
     */
     public static void forcaBrutaRotX(String cadena){
-        String result = "";
         for(int desplazamiento = 0; desplazamiento <minus.length; desplazamiento++){
             System.out.println("(" + desplazamiento + ")->" +  desxifraRotX(cadena, desplazamiento));
         }
