@@ -1,18 +1,48 @@
-
 package iticbcn.xifratge;
+import java.nio.charset.StandardCharsets;
+
 public class XifradorRotX implements Xifrador {
-    
 
     @Override
     public TextXifrat xifra(String missatge, String clau) throws ClauNoSuportada {
         //codigo
-        return null; 
+        int desplazamiento;
+
+        try {
+            desplazamiento = Integer.parseInt(clau);
+        } catch (NumberFormatException e) {
+            throw new ClauNoSuportada("Clau de RotX ha de ser un sencer de 0 a 40");
+        }
+
+        if (desplazamiento < 0 || desplazamiento > 40) {
+            throw new ClauNoSuportada("Clau de RotX ha de ser un sencer de 0 a 40");
+        }
+
+        String resultado = xifraRotX(missatge, desplazamiento);
+        byte[] bytes = resultado.getBytes(StandardCharsets.UTF_8);
+        TextXifrat textXifrat = new TextXifrat(bytes);
+
+        return textXifrat;
     }
 
     @Override
     public String desxifra(TextXifrat textXifrat, String clau) throws ClauNoSuportada {
         // codigo
-        return null;
+        int desplazamiento;
+
+        try {
+            desplazamiento = Integer.parseInt(clau);
+        } catch (NumberFormatException e) {
+            throw new ClauNoSuportada("Clau de RotX ha de ser un sencer de 0 a 40");
+        }
+
+        if (desplazamiento < 0 || desplazamiento > 40) {
+            throw new ClauNoSuportada("Clau de RotX ha de ser un sencer de 0 a 40");
+        }
+
+        String texto = new String(textXifrat.getBytes(), StandardCharsets.UTF_8);
+
+        return desxifraRotX(texto, desplazamiento);
     }
 
     

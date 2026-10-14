@@ -1,48 +1,60 @@
-
 package iticbcn.xifratge;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.nio.charset.StandardCharsets;
 
 public class XifradorMonoalfabetic implements Xifrador {
-    
 
     @Override
     public TextXifrat xifra(String missatge, String clau) throws ClauNoSuportada {
-        //codigo
-        return null; 
+        // codigo
+        if (clau != null) {
+            throw new ClauNoSuportada("Xifratxe monoalfabètic no suporta clau != null");
+        }
+
+        String resultat = xifraMonoAlfa(missatge);
+        return new TextXifrat(resultat.getBytes(StandardCharsets.UTF_8));
     }
 
     @Override
     public String desxifra(TextXifrat textXifrat, String clau) throws ClauNoSuportada {
         // codigo
-        return null;
+        if (clau != null) {
+            throw new ClauNoSuportada("Xifratxe monoalfabètic no suporta clau != null");
+        }
+
+        String texto = new String(textXifrat.getBytes(), StandardCharsets.UTF_8);
+        return desxifraMonoAlfa(texto);
     }
-    
-    private  String letras = "aáàbcçdeéèfghiíìïjklmnñoóòpqrstuúùüvwxyz";
+
+    private String letras = "aáàbcçdeéèfghiíìïjklmnñoóòpqrstuúùüvwxyz";
     private char[] alfabeto = letras.toUpperCase().toCharArray();
-    private  char[] alfabetoPermutado = permutaAlfabet(alfabeto); //aqui esta shuffeleado para poder usarlo.
+    private char[] alfabetoPermutado; // aqui esta shuffeleado para poder usarlo.
 
-
+    // Constructor para inicializar la permutación.
+    public XifradorMonoalfabetic() {
+        alfabetoPermutado = permutaAlfabet(alfabeto);
+    }
 
     public char[] permutaAlfabet(char[] alfabeto){//como no s epuede crear otro array distinto hay q clonarlo
         List<Character> lista = new ArrayList<>();
 
-        for(int i = 0; i<alfabeto.length; i++){ //recorro el array q me pasan 
+        for(int i = 0; i<alfabeto.length; i++){ //recorro el array q me pasan
             lista.add(alfabeto[i]); //lo añado a mi nueva luista para poder hacer el shuffle
         }
 
-        Collections.shuffle(lista); //aqui la mezcla 
+        Collections.shuffle(lista); //aqui la mezcla
         char[] resultado = new char [alfabeto.length];//lugarndnd guardar ese nuevo shuffeled
 
         for (int i = 0; i < lista.size(); i++) {
             resultado[i] = lista.get(i);  //aqui pues en posicion i guardo lo q recorre de mi lista en i.
         }
 
-        
         return resultado;
     }
-    public  String xifraMonoAlfa(String cadena){//hola
+
+    public String xifraMonoAlfa(String cadena){//hola
         String res = "";
 
         for (int i = 0; i < cadena.length(); i++) { //h
@@ -113,7 +125,6 @@ public class XifradorMonoalfabetic implements Xifrador {
         return resultado;
     }
 
-
     public void main(String[] args) {
         String[] msg = {"Test 01 àrbritre, coixí, Perímetre","Test 02 Taüll, DÍA, año","Test 03 Peça, Òrrius, Bòvila" };
         String[] msgCifrado = new String[msg.length];
@@ -129,16 +140,15 @@ public class XifradorMonoalfabetic implements Xifrador {
         System.out.println("\nXifrat\n---------");
         for (int i = 0; i < msg.length; i++) {
             msgCifrado[i] = xifraMonoAlfa(msg[i]);
-            System.out.printf("%-23s => %s%n", msg[i], msgCifrado[i]); 
+            System.out.printf("%-23s => %s%n", msg[i], msgCifrado[i]);
         }
 
         System.out.println("\nDesxifrat\n---------");
 
         for(String mensaje : msgCifrado){
             System.out.printf("%-23s => %s%n", mensaje, desxifraMonoAlfa(mensaje));
-
         }
-        
+
     }
 }
 //collectons.shufle<Lista>

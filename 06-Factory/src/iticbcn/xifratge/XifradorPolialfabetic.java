@@ -4,19 +4,59 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.nio.charset.StandardCharsets;
 
 public class XifradorPolialfabetic implements Xifrador {
 
     @Override
     public TextXifrat xifra(String missatge, String clau) throws ClauNoSuportada {
         //codigo
-        return null; 
+        long clauNumerica;
+
+        try {
+            if (clau == null) {
+                throw new NumberFormatException();
+            }
+            clauNumerica = Long.parseLong(clau);
+        } catch (NumberFormatException e) {
+            throw new ClauNoSuportada(
+                "La clau per xifrat Polialfabètic ha de ser un String convertible a long"
+            );
+        }
+
+        initRandom(clauNumerica);
+
+        String resultado = xifraPoliAlfa(missatge);
+        byte[] bytes = resultado.getBytes(StandardCharsets.UTF_8);
+        TextXifrat textXifrat = new TextXifrat(bytes);
+
+        return textXifrat;
     }
 
     @Override
     public String desxifra(TextXifrat textXifrat, String clau) throws ClauNoSuportada {
         // codigo
-        return null;
+        long clauNumerica;
+
+        try {
+            if (clau == null) {
+                throw new NumberFormatException();
+            }
+            clauNumerica = Long.parseLong(clau);
+        } catch (NumberFormatException e) {
+            throw new ClauNoSuportada(
+                "La clau de Polialfabètic ha de ser un String convertible a long"
+            );
+        }
+
+        initRandom(clauNumerica);
+
+        String texto = new String(
+            textXifrat.getBytes(),
+            StandardCharsets.UTF_8
+        );
+
+        return desxifraPoliAlfa(texto);
     }
 
 
@@ -39,14 +79,14 @@ public class XifradorPolialfabetic implements Xifrador {
             alfabetoPermutado[i] = lista.get(i); //aqui modifico alfabeto permutado y lo añad global
             //x cada posiicon de alfP será igual a la lista shufeleada.
         }
-        
+
     }
 
     public void initRandom(long clauSecreta){
 
         random = new Random(clauSecreta); //creo mi variable random q usa mi clavesecreta
     }
-    
+
 
     public String xifraPoliAlfa(String msg){
         String resultado = "";

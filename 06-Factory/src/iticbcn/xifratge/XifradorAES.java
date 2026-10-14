@@ -10,15 +10,27 @@ import javax.crypto.spec.SecretKeySpec;
 public class XifradorAES implements Xifrador {
     
     @Override
-    public TextXifrat xifra(String missatge, String clau) throws ClauNoSuportada {
-        //codigo
-        return null; 
+    public TextXifrat xifra(String missatge, String clau)
+            throws ClauNoSuportada {
+        try {
+            byte[] resultat = xifraAES(missatge, clau);
+            return new TextXifrat(resultat);
+        } catch (Exception e) {
+            System.err.println("Error xifrant amb AES: " + e.getMessage());
+            System.exit(1);
+            return null;
+        }
     }
 
     @Override
-    public String desxifra(TextXifrat textXifrat, String clau) throws ClauNoSuportada {
-        // codigo
-        return null;
+    public String desxifra(TextXifrat textXifrat, String clau)
+            throws ClauNoSuportada {
+        try {
+            return desxifraAES(textXifrat.getBytes(), clau);
+        } catch (Exception e) {
+            System.err.println("Error desxifrant amb AES: " + e.getMessage());
+            return null;
+        }
     }
     public final String ALGORISME_XIFRAT = "AES"; 
     public final String ALGORISME_HASH = "SHA-256"; 
